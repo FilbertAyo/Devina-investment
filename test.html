@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Blog</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    .news-item {
+      margin-bottom: 20px;
+    }
+    h2 {
+      font-size: 1.2rem;
+    }
+    a {
+      color: blue;
+    }
+  </style>
+</head>
+<body>
+  <h1>Latest News</h1>
+  <div id="news-container"></div>
+
+  <script>
+    const apiKey = 'a84d257f1a5d4ca6831eb23c7ddfbc9c'; // Replace with your own if needed
+    const url = `https://newsapi.org/v2/top-headlines?category=entertainment&country=us&apiKey=${apiKey}`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('news-container');
+
+        if (!data.articles || data.articles.length === 0) {
+          container.innerHTML = '<p>No news found.</p>';
+          return;
+        }
+
+        data.articles.forEach(article => {
+          const blog = document.createElement('div');
+          blog.className = 'news-item';
+          blog.innerHTML = `
+            <h2>${article.title}</h2>
+            <p>${article.description || 'No description available.'}</p>
+            <a href="${article.url}" target="_blank">Read more</a>
+            <hr/>
+          `;
+          container.appendChild(blog);
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching news:', error);
+        document.getElementById('news-container').innerHTML = '<p>Failed to load news.</p>';
+      });
+  </script>
+</body>
+</html>
